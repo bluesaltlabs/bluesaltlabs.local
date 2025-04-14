@@ -1,0 +1,38 @@
+services:
+  db:
+    image: 'jc21/mariadb-aria:latest'
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: 'npm'
+      MYSQL_USER: 'npm'
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+      MARIADB_AUTO_UPGRADE: '1'
+    volumes:
+      - proxy_manager_sql:/var/lib/mysql
+  app:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      # These ports are in format <host-port>:<container-port>
+      - '80:80' # Public HTTP Port
+      - '443:443' # Public HTTPS Port
+      - '81:81' # Admin Web Port
+    environment:
+      DB_MYSQL_HOST: "db"
+      DB_MYSQL_PORT: 3306
+      DB_MYSQL_USER: "npm"
+      DB_MYSQL_PASSWORD: $MYSQL_PASSWORD
+      DB_MYSQL_NAME: "npm"
+    volumes:
+      - proxy_manager_data:/data
+      - proxy_manager_ssl:/etc/letsencrypt
+volumes:
+  proxy_manager_sql:
+    external: true
+  proxy_manager_data:
+    external: true
+  proxy_manager_ssl:
+    external: true

@@ -1,0 +1,46 @@
+version: '3.4'
+services:
+  app:
+    image: monica
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - 8080:80
+    environment:
+      # Generate with `echo -n 'base64:'; openssl rand -base64 32`
+      - APP_KEY=$APP_KEY
+      - DB_HOST=db
+      - DB_USERNAME=monica
+      - DB_PASSWORD=$MYSQL_PASSWORD
+      - APP_ENV=local
+
+      - APP_URL=$APP_URL
+    volumes:
+      - monica_data:/var/www/html/storage
+    networks:
+      - monica_network
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      #- MYSQL_RANDOM_ROOT_PASSWORD=true
+      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE=monica
+      - MYSQL_USER=monica
+      - MYSQL_PASSWORD=$MYSQL_PASSWORD
+    volumes:
+      - monica_sql:/var/lib/mysql
+    networks:
+      - nginx_proxy_manager_proxy_network
+      - monica_network
+volumes:
+  monica_data:
+    external: true
+  monica_sql:
+    external: true
+networks:
+  nginx_proxy_manager_proxy_network:
+    external: true
+  monica_network:
+    driver: bridge

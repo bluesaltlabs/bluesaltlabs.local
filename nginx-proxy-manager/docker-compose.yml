@@ -1,3 +1,4 @@
+version: '3'
 services:
   db:
     image: 'jc21/mariadb-aria:latest'
@@ -10,6 +11,8 @@ services:
       MARIADB_AUTO_UPGRADE: '1'
     volumes:
       - proxy_manager_sql:/var/lib/mysql
+    networks:
+      - npm_internal
   app:
     image: 'jc21/nginx-proxy-manager:latest'
     restart: unless-stopped
@@ -29,6 +32,9 @@ services:
     volumes:
       - proxy_manager_data:/data
       - proxy_manager_ssl:/etc/letsencrypt
+    networks:
+      - proxy_network
+      - npm_internal
 volumes:
   proxy_manager_sql:
     external: true
@@ -36,3 +42,8 @@ volumes:
     external: true
   proxy_manager_ssl:
     external: true
+networks:
+  proxy_network:
+    driver: bridge
+  npm_internal:
+    driver: bridge

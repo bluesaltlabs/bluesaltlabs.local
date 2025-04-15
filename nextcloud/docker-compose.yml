@@ -1,0 +1,19 @@
+version: '3'
+services:
+  nextcloud:
+    image: ghcr.io/nextcloud-releases/all-in-one:latest
+    container_name: nextcloud
+    restart: always
+    ports:
+      - "80:80"
+      - "8080:8080"
+      - "8443:8443"
+    environment:
+      - NEXTCLOUD_DATADIR=$NEXTCLOUD_DATADIR
+    volumes:
+      - nextcloud_config:/mnt/docker-aio-config
+      - //var/run/docker.sock:/var/run/docker.sock:ro
+    init: true
+volumes:
+  nextcloud_config:
+    name: nextcloud_config

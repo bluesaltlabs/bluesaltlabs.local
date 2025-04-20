@@ -18,7 +18,7 @@ services:
     depends_on:
       - ryot-db
     ports:
-      - "8000:8000"
+      - "8001:8000"
     environment:
       - TZ=America/Los_Angeles
       - SERVER_ADMIN_ACCESS_TOKEN=$SERVER_ADMIN_ACCESS_TOKEN

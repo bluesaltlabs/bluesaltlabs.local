@@ -4,18 +4,19 @@ services:
     restart: unless-stopped
     container_name: ryot-db
     volumes:
-      - postgres_storage:/var/lib/postgresql/data
+      - ryot_sql:/var/lib/postgresql/data
     environment:
       - TZ=America/Los_Angeles
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
-
   ryot:
     image: ignisda/ryot:v8 # or ghcr.io/ignisda/ryot:v8
     pull_policy: always
     container_name: ryot
     restart: unless-stopped
+    depends_on:
+      - ryot-db
     ports:
       - "8000:8000"
     environment:
@@ -23,5 +24,5 @@ services:
       - SERVER_ADMIN_ACCESS_TOKEN=$SERVER_ADMIN_ACCESS_TOKEN
       - DATABASE_URL=postgres://postgres:postgres@ryot-db:5432/postgres
 volumes:
-  postgres_storage:
+  ryot_sql:
     external: true

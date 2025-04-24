@@ -1,0 +1,19 @@
+services:
+  silverbullet:
+    container_name: silverbullet
+    image: ghcr.io/silverbulletmd/silverbullet:v2
+    restart: unless-stopped
+    environment:
+      - SB_USER=${USERNAME}:${PASSWORD}
+    volumes:
+      - silverbullet:/space
+    ports:
+      - 3000:3000
+  # To enable auto upgrades, run watchtower
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+volumes:
+  silverbullet:
+    driver: local

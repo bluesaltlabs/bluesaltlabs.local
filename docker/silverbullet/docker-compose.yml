@@ -9,6 +9,8 @@ services:
       - silverbullet:/space
     ports:
       - 4000:3000
+    networks:
+      - proxy_network
   # To enable auto upgrades, run watchtower
   watchtower:
     image: containrrr/watchtower
@@ -17,3 +19,7 @@ services:
 volumes:
   silverbullet:
     driver: local
+networks:
+  proxy_network:
+    name: proxy_network
+    driver: bridge

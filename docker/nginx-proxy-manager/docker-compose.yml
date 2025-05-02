@@ -1,3 +1,4 @@
+version: '3'
 services:
   db:
     image: 'jc21/mariadb-aria:latest'
@@ -43,6 +44,8 @@ volumes:
     external: true
 networks:
   proxy_network:
+    name: proxy_network
     driver: bridge
   npm_internal:
+    name: npm_internal
     driver: bridge

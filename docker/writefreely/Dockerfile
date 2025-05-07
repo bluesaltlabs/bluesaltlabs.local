@@ -8,7 +8,7 @@ ENV GOPATH /go
 ENV PATH $GOPATH/bin:$PATH
 ENV GO111MODULE=on
 
-RUN echo "@community http://dl-cdn.alpinelinux.org/alpine/v3.21/community" >> /etc/apk/repositories && \
+RUN echo "@community https://dl-cdn.alpinelinux.org/alpine/v3.21/community" >> /etc/apk/repositories && \
     apk add --no-cache nodejs-current npm go make g++ git && \
     go install std && \
     go get -u github.com/go-bindata/go-bindata/... && \

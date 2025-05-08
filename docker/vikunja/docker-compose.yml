@@ -3,6 +3,7 @@ services:
     container_name: vikunja
     image: vikunja/vikunja
     environment:
+      VIKUNJA_CORS_ENABLE: true
       VIKUNJA_SERVICE_ENABLEREGISTRATION: $VIKUNJA_SERVICE_ENABLEREGISTRATION
       VIKUNJA_SERVICE_PUBLICURL: $VIKUNJA_SERVICE_PUBLICURL
       VIKUNJA_DATABASE_HOST: vikunja_db

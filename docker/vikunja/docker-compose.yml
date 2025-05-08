@@ -12,12 +12,12 @@ services:
     ports:
       - $PORT:3456
     networks:
-      - proxy_network
+      - nginx_proxy_manager_proxy_network
+      - vikunja_network
     volumes:
       - vikunja_files:/app/vikunja/files
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     restart: unless-stopped
   db:
     image: mariadb:10
@@ -29,15 +29,18 @@ services:
       MYSQL_DATABASE: vikunja
     volumes:
       - vikunja_db:/var/lib/mysql
+    networks:
+      - vikunja_network
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h localhost -u $$MYSQL_USER --password=$$MYSQL_PASSWORD"]
       interval: 2s
       start_period: 30s
 networks:
-  proxy_network:
-    name: proxy_network
+  nginx_proxy_manager_proxy_network:
     external: true
+  vikunja_network:
+    driver: bridge
 volumes:
   vikunja_files:
     driver: local

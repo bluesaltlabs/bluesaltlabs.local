@@ -1,44 +1,36 @@
 services:
   vikunja:
+    container_name: vikunja
     image: vikunja/vikunja
     environment:
+      VIKUNJA_SERVICE_ENABLEREGISTRATION: $VIKUNJA_SERVICE_ENABLEREGISTRATION
       VIKUNJA_SERVICE_PUBLICURL: $VIKUNJA_SERVICE_PUBLICURL
-      VIKUNJA_DATABASE_HOST: db
+      VIKUNJA_DATABASE_HOST: vikunja_db
       VIKUNJA_DATABASE_PASSWORD: $VIKUNJA_DATABASE_PASSWORD
-      VIKUNJA_DATABASE_TYPE: mysql
+      VIKUNJA_DATABASE_TYPE: postgres
       VIKUNJA_DATABASE_USER: vikunja
       VIKUNJA_DATABASE_DATABASE: vikunja
       VIKUNJA_SERVICE_JWTSECRET: $VIKUNJA_SERVICE_JWTSECRET
     ports:
       - $PORT:3456
-    networks:
-      - nginx_proxy_manager_proxy_network
-      - default
     volumes:
       - vikunja_files:/app/vikunja/files
     depends_on:
-      - db
-      #db:
-        #condition: service_healthy
+      vikunja_db:
+        condition: service_healthy
     restart: unless-stopped
-  db:
-    image: mariadb:10
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+  vikunja_db:
+    container_name: vikunja_db
+    image: postgres:17
     environment:
-      MARIADB_RANDOM_ROOT_PASSWORD: true
-      MYSQL_USER: vikunja
-      MYSQL_PASSWORD: $VIKUNJA_DATABASE_PASSWORD
-      MYSQL_DATABASE: vikunja
+      POSTGRES_PASSWORD: $VIKUNJA_DATABASE_PASSWORD
+      POSTGRES_USER: vikunja
     volumes:
-      - vikunja_db:/var/lib/mysql
+      - vikunja_db:/var/lib/postgresql/data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u $$MYSQL_USER --password=$$MYSQL_PASSWORD"]
+      test: ["CMD-SHELL", "pg_isready -h localhost -U $$POSTGRES_USER"]
       interval: 2s
-      start_period: 30s
-networks:
-  nginx_proxy_manager_proxy_network:
-    external: true
 volumes:
   vikunja_files:
     driver: local

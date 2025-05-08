@@ -22,4 +22,4 @@ volumes:
 networks:
   proxy_network:
     name: proxy_network
-    driver: bridge
+    external: true

@@ -13,7 +13,6 @@ services:
       - DB_USERNAME=monica
       - DB_PASSWORD=$MYSQL_PASSWORD
       - APP_ENV=local
-
       - APP_URL=$APP_URL
     volumes:
       - monica_data:/var/www/html/storage

@@ -1,0 +1,18 @@
+services:
+  slash:
+    container_name: slash
+    image: yourselfhosted/slash:latest
+    restart: unless-stopped
+    ports:
+      - 5231:5231
+    volumes:
+      - slash:/var/opt/slash
+    networks:
+      - proxy_network
+volumes:
+  slash:
+    driver: local
+networks:
+  proxy_network:
+    name: proxy_network
+    external: true

@@ -30,6 +30,7 @@ services:
     ports:
       - ${HOST_PORT:-8000}:8000
     networks:
+      - internal_network
       - proxy_network
   db:
     image: pgautoupgrade/pgautoupgrade:17-bookworm
@@ -44,11 +45,15 @@ services:
       - "5432"
     volumes:
       - msar_pgdata:/var/lib/postgresql/data
+    networks:
+      - internal_network
 volumes:
   msar_static:
   msar_media:
   msar_pgdata:
 networks:
+  internal_network:
+    internal: true
   proxy_network:
     name: proxy_network
-    driver: bridge
+    external: true

@@ -47,6 +47,7 @@ services:
       - msar_pgdata:/var/lib/postgresql/data
     networks:
       - internal_network
+      - proxy_network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-mathesar}"]
       interval: 5s

@@ -45,6 +45,8 @@ services:
       - "5432"
     volumes:
       - msar_pgdata:/var/lib/postgresql/data
+    ports:
+      - ${DB_PORT:-5432}:5432
     networks:
       - internal_network
       - proxy_network

@@ -121,11 +121,9 @@ x-config: &config
 # Running this compose file will automatically create a subdirectory named
 # "msar" with the following file structure:
 #
-# msar
-# ├── caddy/  (stores certificates, keys, and other information for Caddy)
-# ├── media/  (stores user uploaded datafiles(.csv/.tsv) to Mathesar)
-# ├── pgdata/ (stores PostgreSQL data)
-# └── static/ (stores static files for Mathesar)
+# msar_media/  (stores user uploaded datafiles(.csv/.tsv) to Mathesar)
+# msar_pgdata/ (stores PostgreSQL data)
+# msar_static/ (stores static files for Mathesar)
 #
 #-------------------------------------------------------------------------------
 # MATHESAR SERVICES
@@ -165,8 +163,8 @@ services:
       # SECURITY WARNING: don't run with DEBUG=true in production!
       DEBUG: ${DEBUG:-false}
     volumes:
-      - msar/static:/code/static
-      - msar/media:/code/media
+      - msar_static:/code/static
+      - msar_media:/code/media
     depends_on:
       db:
         condition: service_healthy
@@ -204,40 +202,12 @@ services:
     expose:
       - "5432"
     volumes:
-      - msar/pgdata:/var/lib/postgresql/data
+      - msar_pgdata:/var/lib/postgresql/data
 volumes:
-  msar:
+  msar_static:
+  msar_media:
+  msar_pgdata:
 networks:
   proxy_network:
-      name: proxy_network
-      driver: bridge
-
-
-  #-----------------------------------------------------------------------------
-  # Caddy
-  #
-  # This service provides a reverse proxy for the Mathesar web server, using our
-  # custom Caddy image hosted on Docker Hub. That image is customized to use a
-  # Caddyfile with an appropriate configuration for Mathesar.
-  #
-  # Specifically, this service routes the requests to backend and the web
-  # frontend of Mathesar while also serving essential staic files and user
-  # uploaded datafiles(.csv/.tsv). It also provides SSL certificates
-  # automatically for any custom domain(s) listed in DOMAIN_NAME that you might
-  # want to use to access Mathesar.
-  #
-  # This service maps the default port for http(80) and https(443) of the host
-  # system to that of docker's for allowing access to Mathesar over http or
-  # https.
-  #
-  # caddy-reverse-proxy:
-  #   image: mathesar/mathesar-caddy:latest
-  #   # This service needs the config variables defined above.
-  #   environment: *config
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-  #   volumes:
-  #     - ./msar/media:/code/media
-  #     - ./msar/static:/code/static
-  #     - ./msar/caddy:/data
+    name: proxy_network
+    driver: bridge

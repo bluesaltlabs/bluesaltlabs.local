@@ -1,44 +1,100 @@
+# Run Monica with fpm flavor, mariadb, cron, queue, redis, and nginx
+#
+# You first need to generate the secrets for the encryption key and db password:
+# `{ echo -n 'base64:'; openssl rand -base64 32; } | docker secret create app_key -`
+# `openssl rand -hex 24 | docker secret create mysql_password -`
+#
+# You might want to set these variables in you .env file:
+#- APP_URL with your domain (https scheme)
+#
+
 services:
-  app:
-    image: monica
+  app: &app
+    build: ./app
+    image: monica-app
+    environment:
+      - APP_KEY_FILE=/run/secrets/app_key
+      - DB_PASSWORD_FILE=/run/secrets/mysql_password
+      - MEILISEARCH_KEY=ChangeMe_ChangeMe
+    volumes:
+      - data:/var/www/html/storage
+    networks:
+      - monica
     restart: always
     depends_on:
       - db
-    ports:
-      - 8080:80
-    environment:
-      # Generate with `echo -n 'base64:'; openssl rand -base64 32`
-      - APP_KEY=$APP_KEY
-      - DB_HOST=db
-      - DB_USERNAME=monica
-      - DB_PASSWORD=$MYSQL_PASSWORD
-      - APP_ENV=local
-      - APP_URL=$APP_URL
-    volumes:
-      - monica_data:/var/www/html/storage
-    networks:
-      - monica_network
+      - redis
+      - memcached
+      - meilisearch
+    secrets:
+      - app_key
+      - mysql_password
   db:
-    image: mysql:5.7
-    restart: always
+    image: mariadb:11
     environment:
-      #- MYSQL_RANDOM_ROOT_PASSWORD=true
-      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+      - MYSQL_RANDOM_ROOT_PASSWORD=true
       - MYSQL_DATABASE=monica
       - MYSQL_USER=monica
-      - MYSQL_PASSWORD=$MYSQL_PASSWORD
+      - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
     volumes:
-      - monica_sql:/var/lib/mysql
+      - mysqldata:/var/lib/mysql
     networks:
-      - nginx_proxy_manager_proxy_network
-      - monica_network
-volumes:
-  monica_data:
-    external: true
-  monica_sql:
-    external: true
+      - monica
+    restart: always
+    secrets:
+      - mysql_password
+  redis:
+    image: redis:alpine
+    restart: always
+    networks:
+      - monica
+  cron:
+    <<: *app
+    command: cron.sh
+  queue:
+    <<: *app
+    command: queue.sh
+  memcached:
+    image: memcached:alpine
+    networks:
+      - monica
+  meilisearch:
+    image: getmeili/meilisearch:latest
+    environment:
+      - MEILI_MASTER_KEY=ChangeMe_ChangeMe
+      - MEILISEARCH_NO_ANALYTICS=true
+    volumes:
+      - meili_data:/meili_data
+    networks:
+      - monica
+  web:
+    build: ./web
+    image: monica-web
+    restart: always
+    ports:
+      - ${WEB_PORT:-80}:80
+    volumes:
+      - data:/var/www/html/storage:ro
+    networks:
+      - monica
+      - proxy_network
+    depends_on:
+      - app
 networks:
-  nginx_proxy_manager_proxy_network:
+  monica:
+    driver: overlay
+  proxy_network:
+    name: proxy_network
     external: true
-  monica_network:
-    driver: bridge
+volumes:
+  data:
+    driver: local
+  mysqldata:
+    driver: local
+  meili_data:
+    driver: local
+secrets:
+  app_key:
+    external: true
+  mysql_password:
+    external: true

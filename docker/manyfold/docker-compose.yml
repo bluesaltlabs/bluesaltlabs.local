@@ -1,0 +1,73 @@
+services:
+  app:
+    container_name: manyfold
+    image: ghcr.io/manyfold3d/manyfold:latest
+    ports:
+      - ${APP_PORT:-3214}:3214
+    volumes:
+      # Uncomment to add a filesystem volume for your model library (or multiple if
+      # you want multiple libraries), in the form <local_path>:<container_path>.
+      # The local path could be a folder that already contains models, in which case Manyfold
+      # will scan and import them, or it could be empty.
+      # The container path can be anything; you will need to enter it in the "new library" form.
+       - models:/models
+    environment:
+      PUID: 1000 # The ID of the user the app will run as
+      PGID: 1000 # The ID of the group the app will run as
+      SECRET_KEY_BASE: a_nice_long_random_string
+      REDIS_URL: redis://redis:6379/1
+
+      # Database connection details; we recommend using a separate PostgreSQL
+      # server for best performance
+      DATABASE_ADAPTER: postgresql
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USER: manyfold
+      DATABASE_PASSWORD: password
+      DATABASE_NAME: manyfold
+
+      # "mysql2" is also available, and you can specify all details in a
+      # single DATABASE_URL variable if you prefer:
+      # DATABASE_URL: {adapter}://{user}:{password}@{host}/{name}
+
+      # You can also use the "sqlite3" adapter if you don't want to run a separate
+      # database server. If you do, specify a path to your database file in DATABASE_NAME,
+      # and make sure it's on a persistent volume! Host, user and password aren't required.
+      # DATABASE_URL: sqlite3:/config/manyfold.sqlite3
+
+      # For details of other optional environment variables, including features such
+      # as multiuser mode, visit https://manyfold.app/sysadmin/configuration.html
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - manyfold
+      - proxy_network
+    links:
+      - postgres
+      - redis
+  postgres:
+    image: postgres:15
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: manyfold
+      POSTGRES_PASSWORD: password
+    restart: unless-stopped
+    networks:
+      - manyfold
+  redis:
+    image: redis:7
+    restart: unless-stopped
+    networks:
+      - manyfold
+volumes:
+  db_data:
+  models:
+networks:
+  manyfold:
+    internal: true
+  proxy_network:
+    name: proxy_network
+    external: true

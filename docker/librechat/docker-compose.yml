@@ -3,7 +3,7 @@ services:
   # LibreChat
   api:
     container_name: librechat
-    image: ghcr.io/danny-avila/librechat-dev:latest
+    image: ghcr.io/danny-avila/librechat-dev-api:latest
     ports:
       - "${PORT}:${PORT}"
     restart: always

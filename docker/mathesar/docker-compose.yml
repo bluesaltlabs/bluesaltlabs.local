@@ -2,6 +2,7 @@ services:
   service:
     container_name: mathesar
     image: mathesar/mathesar:latest
+    restart: always
     environment:
       SECRET_KEY: ${SECRET_KEY:?}
       DOMAIN_NAME: ${DOMAIN_NAME:-http://localhost}
@@ -34,6 +35,7 @@ services:
       - proxy_network
   db:
     image: pgautoupgrade/pgautoupgrade:17-bookworm
+    restart: always
     container_name: mathesar_db
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-mathesar_django}

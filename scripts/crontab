@@ -1,2 +1,2 @@
- 0 2 * * * /root/scripts/backup.sh >> /var/log/restic_backup.log 2>&1
+0 2 * * * /root/scripts/backup-docker-server.sh >> /var/log/restic_backup.log 2>&1
 30 * * * * /root/scripts/hourly.sh >> /var/log/hourly.log 2>&1

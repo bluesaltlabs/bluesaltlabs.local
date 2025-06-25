@@ -3,6 +3,13 @@
 Scripts associated with this project.
 
 
+## Note
+
+Sometimes the logs need to be pruned, and this process does not happen automatically (although it should).
+Don't forget to do this periodically.
+
+
+
 ## Scripts: Backup Docker Server
 
 cron script. Run this nightly to back up `docker-server` data to `windows-server` shared.
@@ -36,3 +43,27 @@ cron script. Run this nightly to back up `docker-server` data to `windows-server
   ```bash
   0 2 * * * /root/scripts/backup.sh >> /var/log/restic_backup.log 2>&1
   ```
+
+
+## Scripts: Daily
+
+Cron script runs every day. See `crontab` for schedule. This is not currently scheduled.
+
+todo
+
+
+
+## Scripts: Hourly
+
+Cron script runs every hour. See `crontab` for schedule.
+
+todo
+
+
+
+
+## Scripts: Minutely
+
+Cron script runs every minute. See `crontab` for schedule. This is not currently scheduled.
+
+todo

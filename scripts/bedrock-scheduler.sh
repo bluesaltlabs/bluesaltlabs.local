@@ -31,11 +31,3 @@ docker compose up --build
 
 # 6. output  that the script has completed.
 echo "Bedrock Scheduler run Complete."
-
-## Todo: use this instead:
-# https://stackoverflow.com/a/59587362
-# docker compose
-version: "3"
-services:
-  app:
-    build: .

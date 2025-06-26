@@ -25,12 +25,17 @@ cd "$WORK_DIR"
 #echo "$REPO_PATH/*" > .git/info/sparse-checkout
 git pull origin main
 
-# 4. Build docker container (use docker compose to simplify?).
-#    Note: if there haven't been any changes, this part shouldn't need to do anything.
-docker build -t bedrock-scraper .
-
-# 5. Run the docker container
-docker run bedrock-scraper
+# 4. Build and run the docker container
+cd "${WORK_DIR}${REPO_PATH}"
+docker compose up -d #--build
 
 # 6. output  that the script has completed.
 echo "Bedrock Scheduler run Complete."
+
+## Todo: use this instead:
+# https://stackoverflow.com/a/59587362
+# docker compose
+version: "3"
+services:
+  app:
+    build: .

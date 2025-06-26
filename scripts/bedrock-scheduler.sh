@@ -27,7 +27,7 @@ git pull origin main
 
 # 4. Build and run the docker container
 cd "${WORK_DIR}${REPO_PATH}"
-docker compose up -d #--build
+docker compose up --build
 
 # 6. output  that the script has completed.
 echo "Bedrock Scheduler run Complete."

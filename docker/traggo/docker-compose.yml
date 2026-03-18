@@ -1,0 +1,19 @@
+services:
+  traggo:
+    image: traggo/server:latest
+    container_name: traggo
+    restart: unless-stopped
+    ports:
+      - "3030:3030"
+    networks:
+      - proxy_network
+    volumes:
+      - traggo_data:/opt/traggo/data
+
+volumes:
+  traggo_data:
+
+networks:
+  proxy_network:
+    name: proxy_network
+    external: true

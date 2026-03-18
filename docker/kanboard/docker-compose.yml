@@ -1,0 +1,24 @@
+services:
+  kanboard:
+    image: kanboard/kanboard:v1.2.51
+    container_name: kanboard
+    restart: unless-stopped
+    networks:
+      - proxy_network
+    ports:
+      - "4040:80"
+    volumes:
+      - kanboard_data:/var/www/app/data
+      - kanboard_plugins:/var/www/app/plugins
+    environment:
+      - PLUGIN_INSTALLER=true
+volumes:
+  kanboard_data:
+    # This volume holds your SQLite database file!
+  kanboard_plugins:
+    # This volume holds any themes or plugins you install.networks:
+
+networks:
+  proxy_network:
+    name: proxy_network
+    external: true

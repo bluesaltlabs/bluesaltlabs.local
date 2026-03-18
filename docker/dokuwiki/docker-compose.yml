@@ -1,0 +1,23 @@
+services:
+  dokuwiki:
+    container_name: dokuwiki
+    image: dokuwiki/dokuwiki:2024-02-06b
+    restart: unless-stopped
+    ports:
+      - "2020:8080"
+    volumes:
+      - dokuwiki_data:/var/www/html
+      - dokuwiki_config:/config
+    environment:
+      - TZ=America/Los_Angeles
+    networks:
+      - proxy_network
+
+volumes:
+  dokuwiki_data:
+  dokuwiki_config:
+
+networks:
+  proxy_network:
+    name: proxy_network
+    external: true

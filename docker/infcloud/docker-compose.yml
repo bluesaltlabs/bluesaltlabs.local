@@ -1,0 +1,29 @@
+services:
+  infcloud:
+    container_name: infcloud
+    hostname: infcloud
+    image: ckulka/infcloud
+    restart: always
+    depends_on:
+      - php
+    ports:
+      - "1046:80"
+    networks:
+      - proxy_network
+    volumes:
+      - infcloud:/usr/share/nginx/infcloud
+      - ./config.js:/usr/share/nginx/infcloud/config.js:ro
+
+  php:
+    image: php:7.3-fpm-alpine
+    restart: always
+    volumes:
+      - infcloud:/usr/share/nginx/infcloud:ro
+
+volumes:
+  infcloud:
+
+networks:
+   proxy_network:
+      name: proxy_network
+      external: true

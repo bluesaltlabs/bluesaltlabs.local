@@ -1,0 +1,26 @@
+services:
+  open-webui:
+    image: openwebui/open-webui
+    container_name: open-webui
+    volumes:
+      - open-webui:/app/backend/data
+    ports:
+      - ${OPEN_WEBUI_PORT-3000}:8080
+    networks:
+      - proxy_network
+    environment:
+      - 'OLLAMA_BASE_URL=http://Lukes-MacBook-Pro.local:11434'
+      - 'WEBUI_SECRET_KEY='
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    restart: unless-stopped
+
+volumes:
+  ollama: {}
+  open-webui: {}
+
+
+networks:
+   proxy_network:
+      name: proxy_network
+      external: true

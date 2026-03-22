@@ -9,7 +9,7 @@ services:
     networks:
       - proxy_network
     environment:
-      - 'OLLAMA_BASE_URL=http://Lukes-MacBook-Pro.local:11434'
+      - 'OLLAMA_BASE_URL=http://192.168.50.64:11434'
       - 'WEBUI_SECRET_KEY='
     extra_hosts:
       - host.docker.internal:host-gateway

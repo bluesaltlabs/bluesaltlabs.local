@@ -2,7 +2,7 @@
 
 # Set environment variables
 export USB_DRIVE_REPO="/mnt/usb-drive/restic"
-export WINDOWS_SERVER_REPO="/mnt/windows-server/restic"
+export MACMINI_REPO="/mnt/macmini/restic"
 export RESTIC_PASSWORD="your-repo-password" # todo: actually use an environment variable.
 
 
@@ -16,28 +16,31 @@ echo "Stopping docker service..."
 systemctl stop docker
 
 
-# Back up docker data, excluding images
+# Back up docker volume data
 echo "Backing up docker data to usb-drive..."
-restic backup /home/docker --repo $USB_DRIVE_REPO --exclude /home/docker/images/*
+restic backup /home/docker/volumes --repo $USB_DRIVE_REPO
 
-echo "Backing up docker data to windows-server..."
-restic backup /home/docker --repo $WINDOWS_SERVER_REPO --exclude /home/docker/images/*
+echo "Backing up docker data to macmini..."
+restic backup /home/docker/volumes --repo $MACMINI_REPO
+
+
+# TODO: Ensure there isn't any other docker-related data to back up!!
 
 
 # Back up gitea data
 echo "Backing up gitea data to usb-drive..."
 restic backup /var/lib/gitea --repo $USB_DRIVE_REPO
 
-echo "Backing up gitea data to windows-server..."
-restic backup /var/lib/gitea --repo $WINDOWS_SERVER_REPO
+echo "Backing up gitea data to macmini..."
+restic backup /var/lib/gitea --repo $MACMINI_REPO
 
 
 # prune old snapshots
 echo "Pruning old snapshots from usb-drive..."
 restic forget --keep-last 7 --prune --repo $USB_DRIVE_REPO
 
-echo "Pruning old snapshots from windows-server..."
-restic forget --keep-last 7 --prune --repo $WINDOWS_SERVER_REPO
+echo "Pruning old snapshots from macmini..."
+restic forget --keep-last 7 --prune --repo $MACMINI_REPO
 
 
 # Restart the docker service

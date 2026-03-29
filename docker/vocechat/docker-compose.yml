@@ -1,0 +1,21 @@
+services:
+  vocechat:
+    image: privoce/vocechat-server:latest
+    container_name: chat
+    hostname: chat
+    restart: always
+    ports:
+      - "2424:3000"
+    networks:
+      - proxy_network
+    volumes:
+      - vocechat:/home/vocechat-server/data
+
+volumes:
+  vocechat:
+    driver: local
+
+networks:
+  proxy_network:
+    name: proxy_network
+    external: true

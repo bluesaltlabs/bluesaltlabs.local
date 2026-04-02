@@ -1,20 +1,14 @@
 # docker-server
 
-192.168.50.23       pihole.bluesaltlabs.com
-
 192.168.50.23       gitea.bluesaltlabs.com
 
 192.168.50.23       silverbullet.bluesaltlabs.com
 
 192.168.50.23       memos.bluesaltlabs.com
 
-192.168.50.23       vikunja.bluesaltlabs.com
-
 192.168.50.23       slash.bluesaltlabs.com
 
 192.168.50.23       linkding.bluesaltlabs.com
-
-192.168.50.23       mathesar.bluesaltlabs.com
 
 192.168.50.23       manyfold.bluesaltlabs.com
 
@@ -22,14 +16,25 @@
 
 192.168.50.23       wiki.bluesaltlabs.com
 
-192.168.50.23       baikal.bluesaltlabs.com
-
 192.168.50.23       traggo.bluesaltlabs.com
 
 192.168.50.23       budget.bluesaltlabs.com
 
-192.168.50.23       infcloud.bluesaltlabs.com
-
 192.168.50.23       ai.bluesaltlabs.com
+
+192.168.50.23       owntracks.bluesaltlabs.com
+
+192.168.50.23       lubelog.bluesaltlabs.com
+192.168.50.23       lubelogger.bluesaltlabs.com
+
+192.168.50.23       time.bluesaltlabs.com
+
+
+# macmini
+
+192.168.50.85       dns.bluesaltlabs.com
+
+
+# homeassistant
 
 192.168.50.107      homeassistant.bluesaltlabs.com

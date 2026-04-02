@@ -1,0 +1,24 @@
+services:
+  dns-server:
+    image: technitium/dns-server:14.3.0
+    hostname: dns
+    restart: unless-stopped
+    ports:
+      - "5380:5380/tcp" #DNS web console (HTTP)
+      - "192.168.50.85:53:53/udp"
+      - "192.168.50.85:53:53/tcp"
+    networks:
+      - proxy_network
+    environment:
+      - DNS_SERVER_DOMAIN=dns.bluesaltlabs.com
+    volumes:
+      - config:/etc/dns
+    sysctls:
+      - net.ipv4.ip_local_port_range=1024 65535
+
+volumes:
+  config:
+
+networks:
+  proxy_network:
+    driver: bridge

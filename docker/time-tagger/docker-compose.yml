@@ -1,0 +1,21 @@
+services:
+   timetagger:
+      image:  ghcr.io/almarklein/timetagger
+      hostname: timetagger
+      restart: unless-stopped
+      volumes:
+        - data:/root/_timetagger
+      ports:
+        - "4321:80"
+      networks:
+        - proxy_network
+      environment:
+        - TIMETAGGER_BIND=0.0.0.0:80
+        - TIMETAGGER_CREDENTIALS=test:$$2a$$08$$zMsjPEGdXHzsu0N/felcbuWrffsH4.4ocDWY5oijsZ0cbwSiLNA8.  # test:test
+
+volumes:
+  data:
+
+networks:
+  proxy_network:
+    driver: bridge

@@ -1,0 +1,39 @@
+services:
+  mqtt_broker:
+    image: eclipse-mosquitto:2.1.2-alpine
+    hostname: mqtt_broker
+    restart: unless-stopped
+    volumes:
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_config:/mosquitto/config
+      - mosquitto_log:/mosquitto/log
+    networks:
+      - owntracks_internal
+  recorder:
+    image: owntracks/recorder
+    container_name: owntracks
+    hostname: owntracks
+    restart: unless-stopped
+    ports:
+      - "8083:8083"
+    volumes:
+      - config:/config
+      - store:/store
+    networks:
+      - owntracks_internal
+      - proxy_network
+    environment:
+      - OTR_HOST=mqtt_broker
+
+volumes:
+  config:
+  store:
+  mosquitto_data:
+  mosquitto_config:
+  mosquitto_log:
+
+networks:
+  owntracks_internal:
+    driver: bridge
+  proxy_network:
+    driver: bridge

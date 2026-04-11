@@ -1,4 +1,4 @@
-# on macmini
+# on docker-server
 
 services:
   dns-server:
@@ -6,11 +6,11 @@ services:
     hostname: dns
     restart: unless-stopped
     ports:
-      - "5380:5380/tcp" #DNS web console (HTTP)
-      - "192.168.50.85:53:53/udp" # Local IP
-      - "192.168.50.85:53:53/tcp" # Local IP
-      - "100.82.209.55:53:53/udp" # Tailscale IP
-      - "100.82.209.55:53:53/tcp" # Tailscale IP
+      - "5381:5380/tcp" #DNS web console (HTTP)
+      - "192.168.50.23:53:53/udp" # Local IP
+      - "192.168.50.23:53:53/tcp" # Local IP
+      - "100.125.190.103:53:53/udp" # Tailscale IP
+      - "100.125.190.103:53:53/tcp" # Tailscale IP
     networks:
       - proxy_network
     environment:

@@ -10,8 +10,7 @@ services:
     volumes:
       - kanboard_data:/var/www/app/data
       - kanboard_plugins:/var/www/app/plugins
-    environment:
-      - PLUGIN_INSTALLER=true
+
 volumes:
   kanboard_data:
     # This volume holds your SQLite database file!
@@ -21,4 +20,4 @@ volumes:
 networks:
   proxy_network:
     name: proxy_network
-    external: true
+    driver: bridge

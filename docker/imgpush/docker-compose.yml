@@ -1,0 +1,19 @@
+services:
+  imgpush:
+    image: hauxir/imgpush:latest
+    container_name: imgpush
+    hostname: images
+    restart: unless-stopped
+    volumes:
+      - images:/images
+    ports:
+      - "5000:5000"
+    networks:
+      - proxy_network
+
+volumes:
+  images:
+
+networks:
+  proxy_network:
+    external: true

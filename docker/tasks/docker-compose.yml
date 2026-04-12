@@ -5,6 +5,8 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
+      # - BASE_PATH=/
+      # - TITLE=Tasks
     volumes:
       - tasks:/tasks
       - config:/config

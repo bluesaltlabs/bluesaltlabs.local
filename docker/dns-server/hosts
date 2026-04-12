@@ -29,6 +29,11 @@
 
 192.168.50.23       time.bluesaltlabs.com
 
+192.168.50.23       dns2.bluesaltlabs.com
+
+192.168.50.23       images.bluesaltlabs.com
+
+192.168.50.23       tasks.bluesaltlabs.com
 
 # macmini
 

@@ -1,0 +1,24 @@
+services:
+  tasks:
+    image: baldissaramatheus/tasks.md
+    container_name: tasks
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - tasks:/tasks
+      - config:/config
+    restart: unless-stopped
+    ports:
+      - 8482:8080
+    networks:
+      - proxy_network
+
+volumes:
+  tasks:
+  config:
+
+networks:
+  proxy_network:
+    name: proxy_network
+    driver: bridge
